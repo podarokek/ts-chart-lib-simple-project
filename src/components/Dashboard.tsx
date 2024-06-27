@@ -1,6 +1,6 @@
 import { useState, FC } from "react";
 import styled from "styled-components";
-import ChartContainer, { ChartContainerProps } from "./ChartContainer";
+import ChartPanel, { ChartPanelProps } from "./ChartPanel";
 
 const ChartsContainer = styled.div`
   width: 100vw;
@@ -13,12 +13,11 @@ const ChartsContainer = styled.div`
   overflow-y: scroll;
 `;
 
-const ChartCard: FC<ChartContainerProps> = styled(ChartContainer)`
+const ChartCard: FC<ChartPanelProps> = styled(ChartPanel)`
   height: 300px;
   display: inline-flex;
   flex-direction: column;
   gap: 16px;
-  padding: 16px;
   border-radius: 8px;
   background-color: #f5f5f5;
   position: relative;
@@ -31,7 +30,7 @@ const ChartCard: FC<ChartContainerProps> = styled(ChartContainer)`
   }
 
   &::after {
-    content: ${({ pair }) => `"${pair}"`};
+    content: ${({ symbol }) => `"${symbol}"`};
     color: rgba(0, 0, 0, 0.2);
     position: absolute;
     left: 50%;
@@ -50,11 +49,12 @@ const NewChartCard = styled.div`
   padding: 16px;
   border-radius: 8px;
   background-color: #f5f5f5;
+  box-sizing: border-box;
 `;
 
 interface ChartProps {
   id: number;
-  pair: string;
+  symbol: string;
 }
 
 export default function Dashboard() {
@@ -62,31 +62,36 @@ export default function Dashboard() {
   const [charts, setCharts] = useState<ChartProps[]>([
     {
       id: 0,
-      pair: "EURUSD",
+      symbol: "EURUSD",
     },
   ]);
 
-  const addChart = (pair: string) => {
+  const addChart = (symbol: string) => {
     setCharts((prev) => [
       ...prev,
       {
         id: nextChartId,
-        pair: pair,
+        symbol: symbol,
       },
     ]);
     setNextChartId((prev) => prev + 1);
   };
 
+  const addChartEURUSD = () => addChart("EURUSD");
+  const addChartUSDJPY = () => addChart("USDJPY");
+  const addChartEURJPY = () => addChart("EURJPY");
+  const addChartEURGBP = () => addChart("EURGBP");
+
   return (
     <ChartsContainer>
       {charts.map((chart) => (
-        <ChartCard key={chart.id} pair={chart.pair} />
+        <ChartCard key={chart.id} symbol={chart.symbol} />
       ))}
       <NewChartCard>
-        <button onClick={() => addChart("EURUSD")}>EURUSD</button>
-        <button onClick={() => addChart("USDJPY")}>USDJPY</button>
-        <button onClick={() => addChart("EURJPY")}>EURJPY</button>
-        <button onClick={() => addChart("EURGBP")}>EURGBP</button>
+        <button onClick={addChartEURUSD}>EURUSD</button>
+        <button onClick={addChartUSDJPY}>USDJPY</button>
+        <button onClick={addChartEURJPY}>EURJPY</button>
+        <button onClick={addChartEURGBP}>EURGBP</button>
       </NewChartCard>
     </ChartsContainer>
   );
