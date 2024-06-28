@@ -55,7 +55,7 @@ class OHLCSeries extends Series {
 
     if (!data[firstIndex] || !data[lastIndex]) return;
 
-    for (let i = firstIndex; i < lastIndex; i++) {
+    for (let i = firstIndex; i <= lastIndex; i++) {
       const bar = data[i] as IndexedDataCellType;
 
       const isRasing =

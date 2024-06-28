@@ -28,7 +28,7 @@ class Chart {
     this.canvasManager = new CanvasManager(this.canvas);
 
     this.visibleRange = {
-      length: 100,
+      length: 10,
       fromIndex: 0,
     };
 
