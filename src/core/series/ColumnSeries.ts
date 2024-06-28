@@ -30,6 +30,7 @@ class ColumnSeries extends Series {
     minMaxValues: MinMaxValuesType
   ): void {
     // Calc values
+    return;
     const maxAxisValue = minMaxValues.max[this.mapping.mapping["volume"]];
     const minAxisValue = minMaxValues.min[this.mapping.mapping["volume"]];
     const segmentWidth = canvasManager.width / visibleRange.length;
@@ -44,10 +45,9 @@ class ColumnSeries extends Series {
       topOffset + (maxAxisValue - price) * priceRatio;
 
     // Bars indexes
-    const firstIndex = Math.max(0, visibleRange.fromIndex);
-    const lastIndex = Math.min(
-      data.length,
-      visibleRange.fromIndex + visibleRange.length
+    const firstIndex = Math.round(Math.max(0, visibleRange.fromIndex));
+    const lastIndex = Math.round(
+      Math.min(data.length, visibleRange.fromIndex + visibleRange.length)
     );
 
     for (let i = firstIndex; i < lastIndex; i++) {

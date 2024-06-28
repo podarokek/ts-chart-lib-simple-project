@@ -22,7 +22,7 @@ export interface DrawColumnBarParams {
 }
 
 class CanvasManager {
-  private canvas: HTMLCanvasElement;
+  private _canvas: HTMLCanvasElement;
   public context: CanvasRenderingContext2D;
   public config: {
     raiseColor: string;
@@ -31,7 +31,7 @@ class CanvasManager {
   };
 
   constructor(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
+    this._canvas = canvas;
     this.context = canvas.getContext("2d")!;
 
     this.config = {
@@ -42,7 +42,7 @@ class CanvasManager {
   }
 
   clear() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.clearRect(0, 0, this._canvas.width, this._canvas.height);
   }
 
   drawOhlcBar({ x, y, w, h, H, rectTopPosition, barType }: DrawOhlcBarParams) {
@@ -86,11 +86,15 @@ class CanvasManager {
   }
 
   get width() {
-    return this.canvas.width;
+    return this._canvas.width;
   }
 
   get height() {
-    return this.canvas.height;
+    return this._canvas.height;
+  }
+
+  get canvas() {
+    return this._canvas;
   }
 }
 

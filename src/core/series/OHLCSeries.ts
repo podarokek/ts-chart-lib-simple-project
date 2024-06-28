@@ -48,11 +48,12 @@ class OHLCSeries extends Series {
       topOffset + (maxAxisValue - price) * priceRatio;
 
     // Bars indexes
-    const firstIndex = Math.max(0, visibleRange.fromIndex);
-    const lastIndex = Math.min(
-      data.length,
-      visibleRange.fromIndex + visibleRange.length
+    const firstIndex = Math.round(Math.max(0, visibleRange.fromIndex));
+    const lastIndex = Math.round(
+      Math.min(data.length - 1, visibleRange.fromIndex + visibleRange.length)
     );
+
+    if (!data[firstIndex] || !data[lastIndex]) return;
 
     for (let i = firstIndex; i < lastIndex; i++) {
       const bar = data[i] as IndexedDataCellType;
