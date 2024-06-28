@@ -48,8 +48,8 @@ class OHLCSeries extends Series {
       topOffset + (maxAxisValue - price) * priceRatio;
 
     // Bars indexes
-    const firstIndex = Math.round(Math.max(0, visibleRange.fromIndex));
-    const lastIndex = Math.round(
+    const firstIndex = Math.trunc(Math.max(0, visibleRange.fromIndex));
+    const lastIndex = Math.ceil(
       Math.min(data.length - 1, visibleRange.fromIndex + visibleRange.length)
     );
 

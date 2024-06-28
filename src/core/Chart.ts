@@ -28,7 +28,7 @@ class Chart {
     this.canvasManager = new CanvasManager(this.canvas);
 
     this.visibleRange = {
-      length: 10,
+      length: 50,
       fromIndex: 0,
     };
 
@@ -58,10 +58,12 @@ class Chart {
   }
 
   protected findMinMaxValuesForKey(key: string): [number, number] {
-    const firstIndex = Math.max(0, this.visibleRange.fromIndex);
-    const lastIndex = Math.min(
-      this.data.length,
-      this.visibleRange.fromIndex + this.visibleRange.length
+    const firstIndex = Math.trunc(Math.max(0, this.visibleRange.fromIndex));
+    const lastIndex = Math.ceil(
+      Math.min(
+        this.data.length - 1,
+        this.visibleRange.fromIndex + this.visibleRange.length
+      )
     );
 
     const min = Math.min(
