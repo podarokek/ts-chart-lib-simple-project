@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, memo } from "react";
+import { FC, useEffect, useRef, memo, useCallback } from "react";
 import { FTInteractiveChart } from "../core/index";
 
 import styled from "styled-components";
@@ -21,21 +21,34 @@ const ChartPanel: FC<ChartPanelProps> = memo(function ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartRef = useRef<FTInteractiveChart | null>(null);
 
-  function createChartInstance() {
-    destroyChartInstance();
-
-    if (!canvasRef.current) return;
-
-    const chart = new FTInteractiveChart(canvasRef.current, symbol);
-    chartRef.current = chart;
+  function adjustCanvasForHighDPI(canvas) {
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
   }
 
-  function destroyChartInstance() {
+  const destroyChartInstance = useCallback(() => {
     if (!chartRef.current) return;
 
     chartRef.current.destroy();
     chartRef.current = null;
-  }
+  }, []);
+
+  const createChartInstance = useCallback(() => {
+    destroyChartInstance();
+
+    if (!canvasRef.current) return;
+
+    adjustCanvasForHighDPI(canvasRef.current);
+
+    const chart = new FTInteractiveChart(canvasRef.current, symbol);
+    chartRef.current = chart;
+  }, [symbol, destroyChartInstance]);
 
   useEffect(() => {
     createChartInstance();
