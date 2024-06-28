@@ -1,46 +1,102 @@
 import CanvasManager from "./CanvasManager";
+import Plot from "./Plot";
 
-// TODO one interface for all project!
-interface DataCell {
-  time: Date;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
+import { DataCellType } from "./FTDataUtils";
+
+export interface VisibleRangeType {
+  length: number;
+  fromIndex: number;
+}
+
+export interface MinMaxValuesType {
+  max: { [key: string]: number };
+  min: { [key: string]: number };
 }
 
 class Chart {
-  private canvas: HTMLCanvasElement;
-  private canvasManager: CanvasManager;
-  // TODO change any to proper type
-  private data: DataCell[] = [];
+  protected canvas: HTMLCanvasElement;
+  protected canvasManager: CanvasManager;
+
+  protected plots: Plot[];
+
+  protected data: DataCellType[] = [];
+
+  protected visibleRange: VisibleRangeType;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.canvasManager = new CanvasManager(this.canvas);
+
+    this.visibleRange = {
+      length: 100,
+      fromIndex: 0,
+    };
+
+    this.plots = [];
   }
 
   // TODO change any to proper type
   loadData(data: any) {
-    console.log(data);
-    this.data = data;
+    this.data = data[0].Bars;
     this.render();
+  }
+
+  createPlot() {
+    const plot = new Plot(this.canvasManager);
+    this.plots.push(plot);
+    return plot;
   }
 
   render() {
     this.canvasManager.clear();
-    const barWidth = 5;
-    let xPos = 0;
 
-    this.data.forEach((cell) => {
-      const color = cell.close >= cell.open ? "green" : "red";
-      const height = Math.abs(cell.close - cell.open);
-      const y = Math.min(cell.open, cell.close);
+    for (const plot of this.plots) {
+      plot.render(this.data, this.visibleRange, this.calculateMinMaxValues());
+    }
 
-      this.canvasManager.drawBar(xPos, y, barWidth, height, color);
-      xPos += barWidth + 1; // add space between bars
-    });
+    return;
+  }
+
+  protected findMinMaxValuesForKey(key: string): [number, number] {
+    const firstIndex = Math.max(0, this.visibleRange.fromIndex);
+    const lastIndex = Math.min(
+      this.data.length,
+      this.visibleRange.fromIndex + this.visibleRange.length
+    );
+
+    const min = Math.min(
+      ...this.data
+        .slice(firstIndex, lastIndex)
+        .map((d: DataCellType) => (d as any)[key])
+    );
+    const max = Math.max(
+      ...this.data
+        .slice(firstIndex, lastIndex)
+        .map((d: DataCellType) => (d as any)[key])
+    );
+
+    return [min, max];
+  }
+
+  public calculateMinMaxValues(keys?: string[]): MinMaxValuesType {
+    if (!this.data.length) return { max: {}, min: {} };
+
+    if (!keys) {
+      keys = Object.keys(this.data[0]);
+    }
+
+    return keys.reduce(
+      (acc: MinMaxValuesType, key: string) => {
+        const [min, max] = this.findMinMaxValuesForKey(key);
+        acc.min[key] = min;
+        acc.max[key] = max;
+        return acc;
+      },
+      {
+        min: {},
+        max: {},
+      }
+    );
   }
 
   destroy() {
