@@ -37,8 +37,6 @@ class FTInteractiveChart extends InteractiveChart {
 
     this.waitingForData = false;
 
-    console.log(this);
-
     this.init();
   }
 
@@ -72,8 +70,6 @@ class FTInteractiveChart extends InteractiveChart {
   }
 
   public async loadMoreData() {
-    console.log("loadMoreData");
-    console.log(this.dataLoader.fetchAndCacheMoreData);
     if (this.waitingForData) return;
 
     this.waitingForData = true;
@@ -84,8 +80,6 @@ class FTInteractiveChart extends InteractiveChart {
         Timeframe: 1,
       }
     );
-
-    console.log(data);
 
     this.loadData(data);
     this.waitingForData = false;

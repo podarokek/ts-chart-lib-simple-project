@@ -15,7 +15,6 @@ class Axis {
       fontSize: 12,
       fontColor: "#7c868e",
       valueForChangingBaseLine: 5,
-      // gridColor: "#00000022",
       gridColor: "#d6d6d6",
     };
   }

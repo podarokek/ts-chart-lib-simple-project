@@ -24,17 +24,6 @@ const ChartPanel: FC<ChartPanelProps> = memo(function ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartRef = useRef<FTInteractiveChart | null>(null);
 
-  function adjustCanvasForHighDPI(canvas) {
-    const ctx = canvas.getContext("2d");
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
-  }
-
   const destroyChartInstance = useCallback(() => {
     if (!chartRef.current) return;
 
@@ -46,8 +35,6 @@ const ChartPanel: FC<ChartPanelProps> = memo(function ({
     destroyChartInstance();
 
     if (!canvasRef.current) return;
-
-    adjustCanvasForHighDPI(canvasRef.current);
 
     const chart = new FTInteractiveChart(canvasRef.current, symbol);
     chartRef.current = chart;

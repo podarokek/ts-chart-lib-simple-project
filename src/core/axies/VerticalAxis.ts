@@ -1,5 +1,5 @@
 import CanvasManager from "../CanvasManager";
-import { MinMaxValuesType, RenderDataType, VisibleRangeType } from "../Chart";
+import { RenderDataType } from "../Chart";
 import Mapping from "../Mapping";
 import DrawablePlane from "../utils/DrawablePlane";
 import Axis from "./Axis";

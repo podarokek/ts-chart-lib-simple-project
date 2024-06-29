@@ -1,5 +1,5 @@
 import CanvasManager from "../CanvasManager";
-import { MinMaxValuesType, RenderDataType } from "../Chart";
+import { RenderDataType } from "../Chart";
 import Mapping from "../Mapping";
 import { DataCellType } from "../data/FTDataUtils";
 import DrawablePlane from "../utils/DrawablePlane";
@@ -37,7 +37,7 @@ class HorizontalAxis extends Axis {
     );
 
     labels.forEach((label) => {
-      const text = new Date(label.time).toISOString().substr(11, 8);
+      const text = this.formatLabel(label.time);
       const textWidth = canvasManager.context.measureText(text).width;
 
       const segmentWidth = drawablePlane.width / renderData.visibleRange.length;
@@ -148,6 +148,10 @@ class HorizontalAxis extends Axis {
     }
 
     return step * 1000;
+  }
+
+  formatLabel(number: number): string {
+    return new Date(number).toISOString().substr(11, 8);
   }
 }
 

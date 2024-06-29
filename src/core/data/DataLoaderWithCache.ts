@@ -1,21 +1,19 @@
 import DataLoader from "./DataLoader";
-import FTDataUtils, { DataCellType, ChunkType } from "../data/FTDataUtils";
+import FTDataUtils, { ChunkType } from "../data/FTDataUtils";
 
 const MAX_RIGHT_DATA_SIDE = 59113;
-// через недостатню кількість даних про рест інтерфейс змущений взяти
+// через недостатню кількість даних про рест інтерфейс змушений взяти
 // за основу це число як останнє можливе значення End в запиті на дані
 
 export default class DataLoaderWithCache extends DataLoader {
   private cache: Map<string, ChunkType[]> = new Map();
   private cacheMeta: Map<string, { lastFromValue: number }> = new Map();
   private static instanceWithCache: DataLoaderWithCache;
-  public random: number;
 
   public requestStep: number = 1000;
 
   private constructor(url: string) {
     super(url);
-    this.random = Math.random();
   }
 
   public static getInstance(url: string): DataLoaderWithCache {
@@ -40,12 +38,6 @@ export default class DataLoaderWithCache extends DataLoader {
     cacheKey: string,
     requestParams: RequestParams
   ): Promise<ChunkType[]> {
-    console.log(
-      "fetchAndCacheData",
-      cacheKey,
-      requestParams,
-      this.cache.has(cacheKey)
-    );
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey)!;
     }
@@ -102,5 +94,3 @@ export default class DataLoaderWithCache extends DataLoader {
     }
   }
 }
-
-console.log(DataLoaderWithCache);

@@ -41,6 +41,18 @@ class CanvasManager {
       fallColor: "#f09e9e",
       volumeColor: "#e9e9e9",
     };
+
+    this.adjustCanvasForHighDPI();
+  }
+
+  adjustCanvasForHighDPI(): void {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = this.canvas.getBoundingClientRect();
+    this.canvas.width = rect.width * dpr;
+    this.canvas.height = rect.height * dpr;
+    this.context.scale(dpr, dpr);
+    this.canvas.style.width = `${rect.width}px`;
+    this.canvas.style.height = `${rect.height}px`;
   }
 
   clear() {
