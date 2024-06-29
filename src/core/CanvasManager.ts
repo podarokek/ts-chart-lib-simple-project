@@ -1,3 +1,5 @@
+import DrawablePlane from "./utils/DrawablePlane";
+
 export enum OHLCBarType {
   Rising,
   Falling,
@@ -83,6 +85,47 @@ class CanvasManager {
   drawColumnBar({ x, y, w, h }: DrawColumnBarParams) {
     this.context.fillStyle = this.config.volumeColor;
     this.context.fillRect(x, y, w, h);
+  }
+
+  drawLine(x1: number, y1: number, x2: number, y2: number, color: string) {
+    this.context.beginPath();
+    this.context.lineWidth = 1;
+    this.context.strokeStyle = color;
+    this.context.moveTo(x1, y1);
+    this.context.lineTo(x2, y2);
+    this.context.stroke();
+  }
+
+  drawText(
+    x: number,
+    y: number,
+    text: string,
+    color: string = "black",
+    textAlign: CanvasTextAlign = "left",
+    textBaseline: CanvasTextBaseline = "bottom"
+  ) {
+    console.log(x, y, text);
+    this.context.fillStyle = color;
+    this.context.font = "16px Arial";
+    this.context.textAlign = textAlign;
+    this.context.textBaseline = textBaseline;
+    this.context.fillText(text, x, y);
+  }
+
+  public clip(drawablePlane: DrawablePlane) {
+    this.context.save();
+    this.context.beginPath();
+    this.context.rect(
+      drawablePlane.x,
+      drawablePlane.y,
+      drawablePlane.width,
+      drawablePlane.height
+    );
+    this.context.clip();
+  }
+
+  public restore() {
+    this.context.restore();
   }
 
   get width() {

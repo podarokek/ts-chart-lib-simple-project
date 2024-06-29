@@ -1,8 +1,9 @@
 import CanvasManager from "../CanvasManager";
 import Series from "./Series";
-import { DataCellType } from "../FTDataUtils";
-import { VisibleRangeType, MinMaxValuesType } from "../Chart";
+import { DataCellType } from "../data/FTDataUtils";
+import { VisibleRangeType, MinMaxValuesType, RenderDataType } from "../Chart";
 import Mapping from "../Mapping";
+import DrawablePlane from "../utils/DrawablePlane";
 
 interface IndexedDataCellType extends DataCellType {
   [key: string]: any;
@@ -25,16 +26,22 @@ class ColumnSeries extends Series {
 
   render(
     canvasManager: CanvasManager,
-    data: DataCellType[],
-    visibleRange: VisibleRangeType,
-    minMaxValues: MinMaxValuesType
+    renderData: RenderDataType,
+    drawablePlane: DrawablePlane
   ): void {
+    const { data, minMaxValues, visibleRange } = renderData;
+
     // Calc values
-    const maxAxisValue = minMaxValues.max[this.mapping.mapping["volume"]];
-    const minAxisValue = minMaxValues.min[this.mapping.mapping["volume"]];
-    const segmentWidth = canvasManager.width / visibleRange.length;
-    const availableHeight = canvasManager.height * this.config.seriesHeight;
-    const topOffset = canvasManager.height * (1 - this.config.seriesHeight);
+    const maxAxisValue = minMaxValues.max[
+      this.mapping.mapping["volume"]
+    ] as number;
+    const minAxisValue = minMaxValues.min[
+      this.mapping.mapping["volume"]
+    ] as number;
+
+    const segmentWidth = drawablePlane.width / visibleRange.length;
+    const availableHeight = drawablePlane.height * this.config.seriesHeight;
+    const topOffset = drawablePlane.height * (1 - this.config.seriesHeight);
     const priceRatio = availableHeight / (maxAxisValue - minAxisValue);
 
     const getSegmentXPosition = (index: number) =>
@@ -59,7 +66,7 @@ class ColumnSeries extends Series {
         (segmentWidth * (1 - this.config.candlestickWidth)) / 2;
       let y = priceToY(bar[this.mapping.mapping["volume"]]);
       let w = segmentWidth * this.config.candlestickWidth;
-      let h = bar[this.mapping.mapping["volume"]] * priceRatio;
+      let h = drawablePlane.height - y;
 
       canvasManager.drawColumnBar({ x, y, w, h });
     }

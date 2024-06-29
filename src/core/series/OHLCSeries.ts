@@ -1,10 +1,11 @@
 import CanvasManager from "../CanvasManager";
-import { MinMaxValuesType, VisibleRangeType } from "../Chart";
-import { DataCellType } from "../FTDataUtils";
+import { MinMaxValuesType, RenderDataType, VisibleRangeType } from "../Chart";
+import { DataCellType } from "../data/FTDataUtils";
 import Mapping from "../Mapping";
 import Series from "./Series";
 
 import { OHLCBarType } from "../CanvasManager";
+import DrawablePlane from "../utils/DrawablePlane";
 
 interface IndexedDataCellType extends DataCellType {
   [key: string]: any;
@@ -27,18 +28,26 @@ class OHLCSeries extends Series {
 
   render(
     canvasManager: CanvasManager,
-    data: DataCellType[],
-    visibleRange: VisibleRangeType,
-    minMaxValues: MinMaxValuesType
+    renderData: RenderDataType,
+    drawablePlane: DrawablePlane
   ): void {
+    const { data, minMaxValues, visibleRange } = renderData;
+
+    console.log({ data, minMaxValues, visibleRange });
+
     // Calc values
-    const maxAxisValue = minMaxValues.max[this.mapping.mapping["high"]];
-    const minAxisValue = minMaxValues.min[this.mapping.mapping["low"]];
-    const segmentWidth = canvasManager.width / visibleRange.length;
+    const maxAxisValue = minMaxValues.max[
+      this.mapping.mapping["high"]
+    ] as number;
+    const minAxisValue = minMaxValues.min[
+      this.mapping.mapping["low"]
+    ] as number;
+
+    const segmentWidth = drawablePlane.width / visibleRange.length;
     const availableHeight =
-      canvasManager.height -
-      canvasManager.height * this.config.axisYPandings * 2;
-    const topOffset = canvasManager.height * this.config.axisYPandings;
+      drawablePlane.height -
+      drawablePlane.height * this.config.axisYPandings * 2;
+    const topOffset = drawablePlane.height * this.config.axisYPandings;
     const priceRatio = availableHeight / (maxAxisValue - minAxisValue);
 
     const getSegmentXPosition = (index: number) =>

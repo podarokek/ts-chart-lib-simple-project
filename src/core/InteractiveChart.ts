@@ -48,6 +48,10 @@ class InteractiveChart extends Chart {
       (this.visibleRange.length - newVisibleRangeLength) * positionPercent;
     this.visibleRange.length = newVisibleRangeLength;
 
+    const { fromDataIndex, toDataIndex } = this.getVisibleRangeDataIndexes();
+    this.visibleRange.fromDataIndex = fromDataIndex;
+    this.visibleRange.toDataIndex = toDataIndex;
+
     this.render();
   }
 

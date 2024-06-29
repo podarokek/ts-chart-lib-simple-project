@@ -1,7 +1,9 @@
 import CanvasManager from "../CanvasManager";
-import { DataCellType } from "../FTDataUtils";
-import { VisibleRangeType, MinMaxValuesType } from "../Chart";
+import { DataCellType } from "../data/FTDataUtils";
+import { VisibleRangeType, MinMaxValuesType, RenderDataType } from "../Chart";
 import Mapping from "../Mapping";
+
+import DrawablePlane from "../utils/DrawablePlane";
 
 class Series {
   private _name: string;
@@ -18,9 +20,8 @@ class Series {
 
   render(
     canvasManager: CanvasManager,
-    data: DataCellType[],
-    visibleRange: VisibleRangeType,
-    minMaxValues: MinMaxValuesType
+    renderData: RenderDataType,
+    drawablePlane: DrawablePlane
   ): void {
     throw new Error("Method not implemented.");
   }

@@ -1,8 +1,8 @@
 import InteractiveChart from "./InteractiveChart";
-import DataLoaderWithCache from "./DataLoaderWithCache";
+import DataLoaderWithCache from "./data/DataLoaderWithCache";
 import Mapping from "./Mapping.ts";
 
-import { RequestParams } from "./FTDataUtils";
+import { RequestParams } from "./data/FTDataUtils.ts";
 import { SeriesType } from "./series";
 
 class FTInteractiveChart extends InteractiveChart {
@@ -26,11 +26,14 @@ class FTInteractiveChart extends InteractiveChart {
       low: "Low",
       open: "Open",
       close: "Close",
+      dt: "Time",
     });
 
     this.volumeMapping = new Mapping("Volume", {
       volume: "TickVolume",
     });
+
+    console.log(this);
 
     this.init();
   }
@@ -46,22 +49,12 @@ class FTInteractiveChart extends InteractiveChart {
       }
     );
 
-    const plot = this.createPlot();
+    const plot = this.createPlot(this.priceMapping);
 
     plot.addSeries("price", SeriesType.OHLC, this.priceMapping);
     plot.addSeries("volume", SeriesType.Column, this.volumeMapping);
 
     this.loadData(data);
-  }
-
-  render() {
-    this.canvasManager.clear();
-
-    for (const plot of this.plots) {
-      plot.render(this.data, this.visibleRange, this.calculateMinMaxValues());
-    }
-
-    return;
   }
 }
 
