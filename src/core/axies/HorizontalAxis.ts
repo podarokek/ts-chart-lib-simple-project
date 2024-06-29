@@ -32,33 +32,32 @@ class HorizontalAxis extends Axis {
     const { min, max } = this.getMinMaxTime(renderData);
     console.log({ min, max });
 
-    const step = this.calculateTimeStep(min, max, 6);
+    const step = this.calculateTimeStep(min, max, 8);
     console.log({ step });
 
-    const labels = this.createTimeLabels(min, max, step);
-    console.log({ labels });
+    const labels = this.createTimeLabels(
+      renderData.data,
+      step,
+      renderData.visibleRange.fromDataIndex,
+      renderData.visibleRange.toDataIndex
+    );
 
     labels.forEach((label) => {
-      // const x = drawablePlane.width * ((label - min) / (max - min));
-      // canvasManager.drawLine(
-      //   drawablePlane.x + x,
-      //   drawablePlane.y,
-      //   drawablePlane.x + x,
-      //   drawablePlane.y + drawablePlane.height,
-      //   "black"
-      // );
-
-      const text = new Date(label).toISOString().substr(11, 8);
+      const text = new Date(label.time).toISOString().substr(11, 8);
       const textWidth = canvasManager.context.measureText(text).width;
-      let x = drawablePlane.width * ((label - min) / (max - min));
+
+      const segmentWidth = drawablePlane.width / renderData.visibleRange.length;
+      let x =
+        this.convertIndexToPixelX(label.index, drawablePlane, renderData) +
+        segmentWidth / 2;
 
       let textAlign = "center" as CanvasTextAlign;
 
       if (x - textWidth / 2 < 0) {
-        x = textWidth / 2;
+        x = 0;
         textAlign = "start";
       } else if (x + textWidth / 2 > drawablePlane.width) {
-        x = drawablePlane.width - textWidth / 2;
+        x = drawablePlane.x + drawablePlane.width;
         textAlign = "end";
       }
 
@@ -73,11 +72,46 @@ class HorizontalAxis extends Axis {
     });
   }
 
-  createTimeLabels(min: number, max: number, step: number): number[] {
+  convertIndexToPixelX(
+    index: number,
+    drawablePlane: DrawablePlane,
+    renderData: RenderDataType
+  ): number {
+    const segmentWidth = drawablePlane.width / renderData.visibleRange.length;
+    return (
+      -(renderData.visibleRange.fromIndex * segmentWidth) + index * segmentWidth
+    );
+  }
+
+  createTimeLabels(
+    data: DataCellType[],
+    step: number,
+    startIndex: number,
+    endIndex: number
+  ): { time: number; index: number }[] {
     const labels = [];
-    for (let time = Math.ceil(min / step) * step; time <= max; time += step) {
-      labels.push(time);
+
+    for (let i = startIndex; i <= endIndex; i++) {
+      const dt = (data[i] as IndexedDataCellType)[this.mapping.mapping["dt"]];
+
+      if (dt % step !== 0) continue;
+
+      if (labels.length === 0) {
+        labels.push({
+          time: dt,
+          index: i,
+        });
+
+        continue;
+      }
+
+      if (labels[labels.length - 1].time < dt)
+        labels.push({
+          time: dt,
+          index: i,
+        });
     }
+
     return labels;
   }
 
