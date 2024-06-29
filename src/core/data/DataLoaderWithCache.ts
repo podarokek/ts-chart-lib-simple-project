@@ -1,5 +1,5 @@
 import DataLoader from "./DataLoader";
-import FTDataUtils, { DataCellType, ChunkType } from "./FTDataUtils";
+import FTDataUtils, { DataCellType, ChunkType } from "../data/FTDataUtils";
 
 const MAX_RIGHT_DATA_SIDE = 59113;
 // через недостатню кількість даних про рест інтерфейс змущений взяти

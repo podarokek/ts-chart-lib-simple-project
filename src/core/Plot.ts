@@ -89,24 +89,24 @@ class Plot {
     const drawablePlanes = this.getDrawablePlanes();
 
     // Render X Axis
-    this.canvasManager.clip(drawablePlanes.xAxis);
+    // this.canvasManager.clip(drawablePlanes.xAxis);
     this.xAxis.render(
       renderData,
       drawablePlanes.series,
       drawablePlanes.xAxis,
       this.canvasManager
     );
-    this.canvasManager.restore();
+    // this.canvasManager.restore();
 
     // Render Y Axis
-    this.canvasManager.clip(drawablePlanes.yAxis);
+    // this.canvasManager.clip(drawablePlanes.yAxis);
     this.yAxis.render(
       renderData,
       drawablePlanes.series,
       drawablePlanes.yAxis,
       this.canvasManager
     );
-    this.canvasManager.restore();
+    // this.canvasManager.restore();
 
     // Render Series
     this.canvasManager.clip(drawablePlanes.series);

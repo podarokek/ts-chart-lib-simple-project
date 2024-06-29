@@ -55,11 +55,21 @@ class HorizontalAxis extends Axis {
         textAlign = "end";
       }
 
+      // Draw grid
+      canvasManager.drawLine(
+        x,
+        drawablePlaneForGrid.y,
+        x,
+        drawablePlaneForGrid.y + drawablePlaneForGrid.height,
+        this.config.gridColor
+      );
+
+      // Draw label
       canvasManager.drawText(
         x,
         drawablePlane.y + drawablePlane.height / 2,
         text,
-        "black",
+        this.config.fontColor,
         textAlign,
         "middle" as CanvasTextBaseline
       );

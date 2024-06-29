@@ -13,9 +13,10 @@ class Axis {
     this.mapping = mapping;
     this.config = {
       fontSize: 12,
-      fontColor: "#000000",
+      fontColor: "#7c868e",
       valueForChangingBaseLine: 5,
-      gridColor: "#00000022",
+      // gridColor: "#00000022",
+      gridColor: "#d6d6d6",
     };
   }
 

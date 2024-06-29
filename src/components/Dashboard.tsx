@@ -38,6 +38,7 @@ const ChartCard: FC<ChartPanelProps> = styled(ChartPanel)`
     transform: translate(-50%, -50%);
     font-size: 3rem;
     font-weight: 900;
+    pointer-events: none;
   }
 `;
 

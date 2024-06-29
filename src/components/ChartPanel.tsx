@@ -5,6 +5,9 @@ import styled from "styled-components";
 
 const Canvas = styled.canvas`
   height: 100%;
+  background-color: #fff;
+  box-shadow: 0px 0px 16px #00000047;
+  overflow: hidden;
 `;
 
 export interface ChartPanelProps {
