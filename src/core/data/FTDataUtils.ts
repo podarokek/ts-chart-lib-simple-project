@@ -15,8 +15,8 @@ export interface ChunkType {
 export interface RequestParams {
   Symbol: string;
   Timeframe: number;
-  Start: number;
-  End: number;
+  // Start: number;
+  // End: number;
 }
 
 class FTDataUtils {

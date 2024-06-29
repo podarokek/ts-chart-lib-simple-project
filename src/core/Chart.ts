@@ -1,3 +1,5 @@
+import Events from "../core/utils/Events";
+
 import CanvasManager from "./CanvasManager";
 import Mapping from "./Mapping";
 import Plot from "./Plot";
@@ -22,7 +24,7 @@ export interface RenderDataType {
   minMaxValues: MinMaxValuesType;
 }
 
-class Chart {
+class Chart extends Events {
   protected canvas: HTMLCanvasElement;
   protected canvasManager: CanvasManager;
 
@@ -33,6 +35,8 @@ class Chart {
   protected visibleRange: VisibleRangeType;
 
   constructor(canvas: HTMLCanvasElement) {
+    super();
+
     this.canvas = canvas;
     this.canvasManager = new CanvasManager(this.canvas);
 

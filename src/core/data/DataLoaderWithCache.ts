@@ -1,18 +1,28 @@
 import DataLoader from "./DataLoader";
 import FTDataUtils, { DataCellType, ChunkType } from "./FTDataUtils";
 
+const MAX_RIGHT_DATA_SIDE = 59113;
+// через недостатню кількість даних про рест інтерфейс змущений взяти
+// за основу це число як останнє можливе значення End в запиті на дані
+
 export default class DataLoaderWithCache extends DataLoader {
   private cache: Map<string, ChunkType[]> = new Map();
+  private cacheMeta: Map<string, { lastFromValue: number }> = new Map();
   private static instanceWithCache: DataLoaderWithCache;
+  public random: number;
 
-  constructor(url: string) {
+  public requestStep: number = 1000;
+
+  private constructor(url: string) {
     super(url);
+    this.random = Math.random();
+  }
 
-    if (DataLoaderWithCache.instanceWithCache) {
-      return DataLoaderWithCache.instanceWithCache;
+  public static getInstance(url: string): DataLoaderWithCache {
+    if (!DataLoaderWithCache.instanceWithCache) {
+      DataLoaderWithCache.instanceWithCache = new DataLoaderWithCache(url);
     }
-
-    DataLoaderWithCache.instanceWithCache = this;
+    return DataLoaderWithCache.instanceWithCache;
   }
 
   public getCacheKey(symbol: string, interval: number): string {
@@ -26,11 +36,50 @@ export default class DataLoaderWithCache extends DataLoader {
     return FTDataUtils.mergeData(existingData, newData);
   }
 
-  async fetchAndCacheData<RequestParams>(
+  public async fetchAndCacheData<RequestParams>(
     cacheKey: string,
     requestParams: RequestParams
   ): Promise<ChunkType[]> {
-    const rawData: ChunkType[] = await this.fetchData(requestParams);
+    console.log(
+      "fetchAndCacheData",
+      cacheKey,
+      requestParams,
+      this.cache.has(cacheKey)
+    );
+    if (this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey)!;
+    }
+
+    return await this._fetchAndCacheData(cacheKey, requestParams);
+  }
+
+  public async fetchAndCacheMoreData<RequestParams>(
+    cacheKey: string,
+    requestParams: RequestParams
+  ): Promise<ChunkType[]> {
+    return await this._fetchAndCacheData(cacheKey, requestParams);
+  }
+
+  private async _fetchAndCacheData<RequestParams>(
+    cacheKey: string,
+    requestParams: RequestParams
+  ): Promise<ChunkType[]> {
+    let fromValue, toValue;
+    if (this.cacheMeta.has(cacheKey)) {
+      toValue = this.cacheMeta.get(cacheKey)!.lastFromValue - 1;
+      fromValue = toValue - this.requestStep;
+    } else {
+      toValue = MAX_RIGHT_DATA_SIDE;
+      fromValue = MAX_RIGHT_DATA_SIDE - this.requestStep;
+    }
+
+    this.cacheMeta.set(cacheKey, { lastFromValue: fromValue });
+
+    const rawData: ChunkType[] = await this.fetchData({
+      ...requestParams,
+      Start: fromValue,
+      End: toValue,
+    });
     const data = rawData.flatMap((chunk) =>
       FTDataUtils.adjustTimestamps(chunk)
     );
@@ -46,15 +95,6 @@ export default class DataLoaderWithCache extends DataLoader {
     return mergedData;
   }
 
-  // async getData(request: DataRequest): Promise<DataCellType[]> {
-  //   const cacheKey = this.getCacheKey(request.symbol, request.interval);
-  //   if (this.cache.has(cacheKey)) {
-  //     return this.cache.get(cacheKey)!;
-  //   }
-
-  //   return await this.fetchAndCacheData(request);
-  // }
-
   removeData(symbol: string, interval: number): void {
     const cacheKey = this.getCacheKey(symbol, interval);
     if (this.cache.has(cacheKey)) {
@@ -62,3 +102,5 @@ export default class DataLoaderWithCache extends DataLoader {
     }
   }
 }
+
+console.log(DataLoaderWithCache);

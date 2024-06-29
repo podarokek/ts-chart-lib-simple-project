@@ -1,4 +1,4 @@
-import { RequestParams } from "../core/FTDataUtil";
+import { RequestParams } from "../data/FTDataUtils";
 
 // TODO one interface for all project!
 interface DataCell {
@@ -9,8 +9,6 @@ interface DataCell {
   close: number;
   volume: number;
 }
-
-type ParamsType = Record<string, string | number>;
 
 class DataLoader {
   private url: string = "";
@@ -30,7 +28,8 @@ class DataLoader {
       .join("&");
   }
 
-  async fetchData(params: RequestParams): Promise<any> {
+  async fetchData(params: any): Promise<any> {
+    console.log("FETCH", this.url, params);
     const response = await fetch(
       this.url + DataLoader.UrlParamsToString(params)
     );
@@ -39,21 +38,6 @@ class DataLoader {
     }
     return await response.json();
   }
-
-  // processData<ChunkType>(data: ChunkType[]): ChunkType[] {
-  //   // const chunkStart = data.ChunkStart;
-  //   return data.map((chunk: ChunkType) => ({
-  //     chunkStart: chunk.chunkStart,
-  //     Bars: chunk.Bars.map((bar: any) => ({
-  //       time: new Date((chunk.chunkStart + bar.Time) * 1000),
-  //       open: bar.Open,
-  //       high: bar.High,
-  //       low: bar.Low,
-  //       close: bar.Close,
-  //       volume: bar.TickVolume,
-  //     })),
-  //   }));
-  // }
 }
 
 export default DataLoader;

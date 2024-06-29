@@ -28,6 +28,17 @@ class InteractiveChart extends Chart {
     );
   }
 
+  private removeEventListeners() {
+    this.canvasManager.canvas.removeEventListener(
+      "wheel",
+      this.onScroll.bind(this)
+    );
+    this.canvasManager.canvas.removeEventListener(
+      "mousedown",
+      this.onMouseDown.bind(this)
+    );
+  }
+
   private onScroll(event: WheelEvent) {
     event.preventDefault();
     const delta =
@@ -52,7 +63,17 @@ class InteractiveChart extends Chart {
     this.visibleRange.fromDataIndex = fromDataIndex;
     this.visibleRange.toDataIndex = toDataIndex;
 
+    this.checkIsNeedMoreData();
+
     this.render();
+  }
+
+  private checkIsNeedMoreData() {
+    if (this.visibleRange.fromIndex < 0) {
+      this.emit("preload", "left");
+    }
+
+    // TODO append data
   }
 
   private onMouseDown(event: MouseEvent) {
@@ -74,6 +95,10 @@ class InteractiveChart extends Chart {
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
+  }
+
+  public destroy(): void {
+    this.removeEventListeners();
   }
 }
 
