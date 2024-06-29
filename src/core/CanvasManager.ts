@@ -139,6 +139,10 @@ class CanvasManager {
     this.context.restore();
   }
 
+  destroy() {
+    this._canvas.remove();
+  }
+
   get width() {
     return this._canvas.width;
   }

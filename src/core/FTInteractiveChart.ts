@@ -17,6 +17,8 @@ class FTInteractiveChart extends InteractiveChart {
   constructor(canvas: HTMLCanvasElement, symbol: string) {
     super(canvas);
 
+    console.log(this);
+
     this.dataLoader = DataLoaderWithCache.getInstance(
       "https://beta.forextester.com/data/api/Metadata/bars/chunked?Broker=Advanced&UseMessagePack=false&"
     );
@@ -88,6 +90,11 @@ class FTInteractiveChart extends InteractiveChart {
   public moveVisibleRangeToEnd() {
     this.visibleRange.fromIndex = this.data.length - this.visibleRange.length;
     this.render();
+  }
+
+  public destroy(): void {
+    // this.dataLoader.destroy();
+    super.destroy();
   }
 }
 

@@ -99,6 +99,7 @@ class InteractiveChart extends Chart {
 
   public destroy(): void {
     this.removeEventListeners();
+    super.destroy();
   }
 }
 

@@ -1,6 +1,5 @@
 import CanvasManager from "./CanvasManager";
-import { VisibleRangeType, MinMaxValuesType, RenderDataType } from "./Chart";
-import { DataCellType } from "./data/FTDataUtils.ts";
+import { RenderDataType } from "./Chart";
 
 import HorizontalAxis from "./axies/HorizontalAxis";
 import VerticalAxis from "./axies/VerticalAxis";
@@ -18,7 +17,6 @@ import {
 
 class Plot {
   private canvasManager: CanvasManager;
-  private mapping: Mapping;
   private series: { [key: string]: Series };
   private xAxis: HorizontalAxis;
   private yAxis: VerticalAxis;
@@ -34,7 +32,6 @@ class Plot {
   constructor(canvasManager: CanvasManager, mapping: Mapping) {
     this.canvasManager = canvasManager;
     this.series = {};
-    this.mapping = mapping;
     this.xAxis = new HorizontalAxis(mapping);
     this.yAxis = new VerticalAxis(mapping);
 

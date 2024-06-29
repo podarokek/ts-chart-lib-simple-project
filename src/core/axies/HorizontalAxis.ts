@@ -96,7 +96,7 @@ class HorizontalAxis extends Axis {
     const labels = [];
 
     for (let i = startIndex; i <= endIndex; i++) {
-      const dt = (data[i] as IndexedDataCellType)[this.mapping.mapping["dt"]];
+      const dt = (data[i] as IndexedDataCellType)[this.mapping.getKey("dt")];
 
       if (dt % step !== 0) continue;
 
@@ -129,8 +129,8 @@ class HorizontalAxis extends Axis {
     const to = visibleRange.toDataIndex as number;
 
     return {
-      min: (data[from] as IndexedDataCellType)[this.mapping.mapping["dt"]],
-      max: (data[to] as IndexedDataCellType)[this.mapping.mapping["dt"]],
+      min: (data[from] as IndexedDataCellType)[this.mapping.getKey("dt")],
+      max: (data[to] as IndexedDataCellType)[this.mapping.getKey("dt")],
     };
   }
 

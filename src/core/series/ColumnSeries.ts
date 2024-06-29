@@ -33,10 +33,10 @@ class ColumnSeries extends Series {
 
     // Calc values
     const maxAxisValue = minMaxValues.max[
-      this.mapping.mapping["volume"]
+      this.mapping.getKey("volume")
     ] as number;
     const minAxisValue = minMaxValues.min[
-      this.mapping.mapping["volume"]
+      this.mapping.getKey("volume")
     ] as number;
 
     const segmentWidth = drawablePlane.width / visibleRange.length;
@@ -64,7 +64,7 @@ class ColumnSeries extends Series {
       let x =
         getSegmentXPosition(i) +
         (segmentWidth * (1 - this.config.candlestickWidth)) / 2;
-      let y = priceToY(bar[this.mapping.mapping["volume"]]);
+      let y = priceToY(bar[this.mapping.getKey("volume")]);
       let w = segmentWidth * this.config.candlestickWidth;
       let h = drawablePlane.height - y;
 

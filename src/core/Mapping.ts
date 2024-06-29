@@ -7,6 +7,10 @@ class Mapping {
     this._mapping = mapping;
   }
 
+  getKey(value: string): string {
+    return this._mapping[value];
+  }
+
   get name() {
     return this._name;
   }

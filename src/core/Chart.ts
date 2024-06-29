@@ -157,7 +157,7 @@ class Chart extends Events {
   }
 
   destroy() {
-    // TODO
+    this.canvasManager.destroy();
   }
 }
 

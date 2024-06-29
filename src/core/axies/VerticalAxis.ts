@@ -41,8 +41,8 @@ class VerticalAxis extends Axis {
   ): void {
     if (!renderData.minMaxValues || !renderData.visibleRange) return;
 
-    const min = renderData.minMaxValues.min[this.mapping.mapping["low"]];
-    const max = renderData.minMaxValues.max[this.mapping.mapping["high"]];
+    const min = renderData.minMaxValues.min[this.mapping.getKey("low")];
+    const max = renderData.minMaxValues.max[this.mapping.getKey("high")];
 
     if (min == null || max == null) return;
 

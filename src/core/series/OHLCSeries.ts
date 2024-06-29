@@ -35,11 +35,9 @@ class OHLCSeries extends Series {
 
     // Calc values
     const maxAxisValue = minMaxValues.max[
-      this.mapping.mapping["high"]
+      this.mapping.getKey("high")
     ] as number;
-    const minAxisValue = minMaxValues.min[
-      this.mapping.mapping["low"]
-    ] as number;
+    const minAxisValue = minMaxValues.min[this.mapping.getKey("low")] as number;
 
     const segmentWidth = drawablePlane.width / visibleRange.length;
     const availableHeight =
@@ -66,9 +64,9 @@ class OHLCSeries extends Series {
       const bar = data[i] as IndexedDataCellType;
 
       const isRasing =
-        bar[this.mapping.mapping["close"]] > bar[this.mapping.mapping["open"]];
+        bar[this.mapping.getKey("close")] > bar[this.mapping.getKey("open")];
       const barType =
-        bar[this.mapping.mapping["close"]] == bar[this.mapping.mapping["open"]]
+        bar[this.mapping.getKey("close")] == bar[this.mapping.getKey("open")]
           ? OHLCBarType.Neutral
           : isRasing
           ? OHLCBarType.Rising
@@ -77,19 +75,19 @@ class OHLCSeries extends Series {
       let x =
         getSegmentXPosition(i) +
         (segmentWidth * (1 - this.config.candlestickWidth)) / 2;
-      let y = priceToY(bar[this.mapping.mapping["high"]]);
+      let y = priceToY(bar[this.mapping.getKey("high")]);
       let w = segmentWidth * this.config.candlestickWidth;
       let h =
         Math.abs(
-          bar[this.mapping.mapping["close"]] - bar[this.mapping.mapping["open"]]
+          bar[this.mapping.getKey("close")] - bar[this.mapping.getKey("open")]
         ) * priceRatio;
       let H =
         Math.abs(
-          bar[this.mapping.mapping["high"]] - bar[this.mapping.mapping["low"]]
+          bar[this.mapping.getKey("high")] - bar[this.mapping.getKey("low")]
         ) * priceRatio;
       let rectTopPosition = isRasing
-        ? priceToY(bar[this.mapping.mapping["close"]])
-        : priceToY(bar[this.mapping.mapping["open"]]);
+        ? priceToY(bar[this.mapping.getKey("close")])
+        : priceToY(bar[this.mapping.getKey("open")]);
 
       canvasManager.drawOhlcBar({ x, y, w, h, H, rectTopPosition, barType });
     }
