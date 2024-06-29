@@ -4,7 +4,9 @@ class InteractiveChart extends Chart {
   public config: {
     onScrollFactor: number;
     minVisibleRangeLength: number;
+    dblClickTime: number;
   };
+  private lastMouseDownTime: number;
 
   constructor(canvas: HTMLCanvasElement) {
     super(canvas);
@@ -12,7 +14,10 @@ class InteractiveChart extends Chart {
     this.config = {
       onScrollFactor: 0.1,
       minVisibleRangeLength: 10,
+      dblClickTime: 200,
     };
+
+    this.lastMouseDownTime = Date.now();
 
     this.addEventListeners();
   }
@@ -76,8 +81,14 @@ class InteractiveChart extends Chart {
     // TODO append data
   }
 
+  onDoubleClick() {
+    this.visibleRange.fromIndex = this.data.length - this.visibleRange.length;
+    this.render();
+  }
+
   private onMouseDown(event: MouseEvent) {
     let startX = event.clientX;
+
     const onMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
 
@@ -85,6 +96,7 @@ class InteractiveChart extends Chart {
       this.visibleRange.fromIndex -=
         deltaX / (this.canvasManager.width / this.visibleRange.length);
 
+      this.checkIsNeedMoreData();
       this.render();
     };
 
@@ -92,6 +104,12 @@ class InteractiveChart extends Chart {
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
+
+    if (Date.now() - this.lastMouseDownTime > this.config.dblClickTime) {
+      this.lastMouseDownTime = Date.now();
+    } else {
+      this.onDoubleClick();
+    }
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);

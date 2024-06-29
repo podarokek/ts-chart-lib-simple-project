@@ -50,9 +50,10 @@ class Chart extends Events {
     this.plots = [];
   }
 
-  // TODO change any to proper type
   loadData(data: any) {
-    this.data = data[0].Bars;
+    this.visibleRange.fromIndex += Math.abs(this.data.length - data.length);
+    this.data = data;
+
     this.render();
   }
 

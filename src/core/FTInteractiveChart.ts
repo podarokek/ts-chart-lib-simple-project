@@ -17,8 +17,6 @@ class FTInteractiveChart extends InteractiveChart {
   constructor(canvas: HTMLCanvasElement, symbol: string) {
     super(canvas);
 
-    console.log(this);
-
     this.dataLoader = DataLoaderWithCache.getInstance(
       "https://beta.forextester.com/data/api/Metadata/bars/chunked?Broker=Advanced&UseMessagePack=false&"
     );
@@ -60,7 +58,7 @@ class FTInteractiveChart extends InteractiveChart {
     plot.addSeries("price", SeriesType.OHLC, this.priceMapping);
     plot.addSeries("volume", SeriesType.Column, this.volumeMapping);
 
-    this.loadData(data);
+    this.loadData(this.concatDataFromServer(data));
     this.waitingForData = false;
     this.moveVisibleRangeToEnd();
 
@@ -83,8 +81,12 @@ class FTInteractiveChart extends InteractiveChart {
       }
     );
 
-    this.loadData(data);
+    this.loadData(this.concatDataFromServer(data));
     this.waitingForData = false;
+  }
+
+  private concatDataFromServer(data: any) {
+    return data.flatMap((chunk: any) => [...chunk.Bars]);
   }
 
   public moveVisibleRangeToEnd() {
