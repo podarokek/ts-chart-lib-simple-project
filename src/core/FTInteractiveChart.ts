@@ -33,8 +33,6 @@ class FTInteractiveChart extends InteractiveChart {
       volume: "TickVolume",
     });
 
-    console.log(this);
-
     this.init();
   }
 

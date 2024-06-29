@@ -33,8 +33,6 @@ class OHLCSeries extends Series {
   ): void {
     const { data, minMaxValues, visibleRange } = renderData;
 
-    console.log({ data, minMaxValues, visibleRange });
-
     // Calc values
     const maxAxisValue = minMaxValues.max[
       this.mapping.mapping["high"]

@@ -38,8 +38,6 @@ class Plot {
     this.xAxis = new HorizontalAxis(mapping);
     this.yAxis = new VerticalAxis(mapping);
 
-    console.log(this);
-
     this.config = {
       xAxis: {
         height: 30,
@@ -88,7 +86,6 @@ class Plot {
   }
 
   render(renderData: RenderDataType) {
-    console.log("render", renderData);
     const drawablePlanes = this.getDrawablePlanes();
 
     // Render X Axis

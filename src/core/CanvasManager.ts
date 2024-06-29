@@ -104,7 +104,6 @@ class CanvasManager {
     textAlign: CanvasTextAlign = "left",
     textBaseline: CanvasTextBaseline = "bottom"
   ) {
-    console.log(x, y, text);
     this.context.fillStyle = color;
     this.context.font = "16px Arial";
     this.context.textAlign = textAlign;

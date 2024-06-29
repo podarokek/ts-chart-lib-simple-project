@@ -20,9 +20,6 @@ class HorizontalAxis extends Axis {
     drawablePlane: DrawablePlane,
     canvasManager: CanvasManager
   ): void {
-    console.log("RENDER X AXIS");
-    console.log(renderData.visibleRange, drawablePlane);
-
     if (
       renderData.visibleRange.fromDataIndex === null ||
       renderData.visibleRange.toDataIndex === null
@@ -30,10 +27,7 @@ class HorizontalAxis extends Axis {
       return;
 
     const { min, max } = this.getMinMaxTime(renderData);
-    console.log({ min, max });
-
     const step = this.calculateTimeStep(min, max, 8);
-    console.log({ step });
 
     const labels = this.createTimeLabels(
       renderData.data,
